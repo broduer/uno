@@ -5,6 +5,7 @@ using System;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Uno.UI.Xaml.Core;
 
 namespace Uno.UI.RuntimeTests.Tests.Uno_Helpers;
@@ -197,10 +198,10 @@ public partial class Given_DependencyPropertyHelper
 	public void When_GetPropertyDetails_DataContext()
 	{
 		// Arrange
-		var property = FrameworkElement.DataContextProperty;
+		var property = UIElement.DataContextProperty;
 
 		// Act
-		var (valueType, ownerType, name, isTypeNullable, isAttached, inInherited, defaultValue) = DependencyPropertyHelper.GetPropertyDetails(property);
+		var (valueType, _, name, isTypeNullable, isAttached, inInherited, defaultValue) = DependencyPropertyHelper.GetPropertyDetails(property);
 
 		// Assert
 		using var _ = new AssertionScope();
@@ -212,6 +213,33 @@ public partial class Given_DependencyPropertyHelper
 		inInherited.Should().BeTrue();
 		defaultValue.Should().BeNull();
 	}
+
+	[TestMethod]
+	public void When_GetPropertyDetails_Attached()
+	{
+		// Arrange
+		var property = Grid.RowProperty;
+
+		// Act
+		var (valueType, ownerType, name, isTypeNullable, isAttached, inInherited, defaultValue) = DependencyPropertyHelper.GetPropertyDetails(property);
+
+		// Assert
+		using var _ = new AssertionScope();
+		valueType.Should().Be(typeof(int));
+		ownerType.Should().Be(typeof(Grid));
+		name.Should().Be("Row");
+		isTypeNullable.Should().BeFalse();
+		isAttached.Should().BeTrue();
+		inInherited.Should().BeFalse();
+		defaultValue.Should().Be(0);
+	}
+
+	[TestMethod]
+	public void When_GetProperties()
+	{
+		var properties = DependencyPropertyHelper.GetDependencyPropertiesForType<DerivedTestClass>();
+	}
+
 
 	private partial class TestClass : FrameworkElement // Not a DependencyObject because we don't want to deal with the generator here
 	{
