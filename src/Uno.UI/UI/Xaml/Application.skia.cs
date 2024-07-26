@@ -16,6 +16,7 @@ namespace Microsoft.UI.Xaml
 {
 	public partial class Application : IApplicationEvents
 	{
+		private static bool _startInvoked;
 		private static string _arguments = "";
 
 		partial void InitializePartial()
