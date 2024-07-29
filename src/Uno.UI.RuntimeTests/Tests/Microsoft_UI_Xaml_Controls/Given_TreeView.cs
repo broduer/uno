@@ -68,7 +68,7 @@ namespace Uno.UI.RuntimeTests.Tests.Microsoft_UI_Xaml_Controls
 #if HAS_UNO
 		[TestMethod]
 #if !HAS_INPUT_INJECTOR
-		[Ignore("InputInjector is only supported on skia")]
+		[Ignore("InputInjector is not supported on this platform.")]
 #endif
 		public async Task When_TreeViewItem_Dragged_Near_the_Edge()
 		{
@@ -239,7 +239,7 @@ namespace Uno.UI.RuntimeTests.Tests.Microsoft_UI_Xaml_Controls
 		// https://github.com/unoplatform/uno/issues/16041
 		[TestMethod]
 #if !HAS_INPUT_INJECTOR
-		[Ignore("InputInjector is only supported on skia")]
+		[Ignore("InputInjector is not supported on this platform.")]
 #elif HAS_UNO && !HAS_UNO_WINUI
 		[Ignore("Fails on UWP branch as mixing WUX and MUX types causes errors.")]
 #endif
@@ -321,7 +321,7 @@ namespace Uno.UI.RuntimeTests.Tests.Microsoft_UI_Xaml_Controls
 
 		[TestMethod]
 #if !HAS_INPUT_INJECTOR
-		[Ignore("InputInjector is only supported on skia")]
+		[Ignore("InputInjector is not supported on this platform.")]
 #elif HAS_UNO && !HAS_UNO_WINUI
 		[Ignore("Fails on UWP branch as mixing WUX and MUX types causes errors.")]
 #endif

@@ -9,8 +9,12 @@ using Windows.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.System;
+using Windows.UI.Input.Preview.Injection;
 using FluentAssertions;
 using static Private.Infrastructure.TestServices;
 using System.Collections.Generic;
@@ -24,12 +28,6 @@ using Size = Windows.Foundation.Size;
 using SkiaSharp;
 using Microsoft.UI.Xaml.Documents.TextFormatting;
 #endif
-#if HAS_INPUT_INJECTOR
-using Microsoft.UI.Xaml.Input;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.System;
-using Windows.UI.Input.Preview.Injection;
-#endif
 
 namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 {
@@ -39,6 +37,8 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 	{
 #if __ANDROID__
 		[Ignore("Visually looks good, but fails :(")]
+#elif !HAS_RENDER_TARGET_BITMAP
+		[Ignore("Cannot take screenshot on this platform.")]
 #endif
 		[TestMethod]
 		[DataRow((ushort)400, FontStyle.Italic, FontStretch.Condensed, "ms-appx:///Assets/Fonts/OpenSans/OpenSans_Condensed-MediumItalic.ttf")]
@@ -683,16 +683,13 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
+#if __MACOS__
+		[Ignore("Currently fails on macOS, part of #9282 epic")]
+#elif !HAS_RENDER_TARGET_BITMAP
+		[Ignore("Cannot take screenshot on this platform.")]
+#endif
 		public async Task When_SolidColorBrush_With_Opacity()
 		{
-			if (!ApiInformation.IsTypePresent("Microsoft.UI.Xaml.Media.Imaging.RenderTargetBitmap"))
-			{
-				Assert.Inconclusive(); // System.NotImplementedException: RenderTargetBitmap is not supported on this platform.;
-			}
-
-#if __MACOS__
-			Assert.Inconclusive();
-#endif
 			var SUT = new TextBlock
 			{
 				Text = "••••••••",
@@ -875,8 +872,12 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 #if HAS_UNO // GetMouse is not available on WinUI
 		#region IsTextSelectionEnabled
 
-#if HAS_INPUT_INJECTOR
 		[TestMethod]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#elif !HAS_RENDER_TARGET_BITMAP
+		[Ignore("Cannot take screenshot on this platform.")]
+#endif
 		public async Task When_IsTextSelectionEnabled_PointerDrag()
 		{
 			var SUT = new TextBlock
@@ -920,6 +921,11 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#elif !HAS_RENDER_TARGET_BITMAP
+		[Ignore("Cannot take screenshot on this platform.")]
+#endif
 		public async Task When_IsTextSelectionEnabled_DoubleTapped()
 		{
 			var SUT = new TextBlock
@@ -965,6 +971,11 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#elif !HAS_RENDER_TARGET_BITMAP
+		[Ignore("Cannot take screenshot on this platform.")]
+#endif
 		public async Task When_IsTextSelectionEnabled_Chunking_DoubleTapped()
 		{
 			var SUT = new TextBlock
@@ -1011,6 +1022,11 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#elif !HAS_RENDER_TARGET_BITMAP
+		[Ignore("Cannot take screenshot on this platform.")]
+#endif
 		public async Task When_IsTextSelectionEnabled_Wrapping_DoubleTapped()
 		{
 			var SUT = new TextBlock
@@ -1059,6 +1075,9 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#endif
 		public async Task When_IsTextSelectionEnabled_SurrogatePair_Copy()
 		{
 			var SUT = new TextBlock
@@ -1088,6 +1107,9 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#endif
 		public async Task When_IsTextSelectionEnabled_CRLF()
 		{
 			var SUT = new TextBlock
@@ -1149,7 +1171,9 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
-#if !__SKIA__
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#elif !__SKIA__
 		[Ignore("The context menu is only implemented on skia.")]
 #endif
 		[DataRow(true)]
@@ -1180,6 +1204,11 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#elif !HAS_RENDER_TARGET_BITMAP
+		[Ignore("Cannot take screenshot on this platform.")]
+#endif
 		public async Task When_IsTextSelectionEnabled_Keyboard_SelectAll_Copy()
 		{
 			var SUT = new TextBlock
@@ -1222,6 +1251,11 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#elif !HAS_RENDER_TARGET_BITMAP
+		[Ignore("Cannot take screenshot on this platform.")]
+#endif
 		public async Task When_IsTextSelectionEnabled_ContextMenu_SelectAll()
 		{
 			var SUT = new TextBlock
@@ -1261,6 +1295,9 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 		}
 
 		[TestMethod]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#endif
 		public async Task When_IsTextSelectionEnabled_ContextMenu_Copy()
 		{
 			var SUT = new TextBlock
@@ -1292,9 +1329,8 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 
 			Assert.AreEqual("world", await Clipboard.GetContent()!.GetTextAsync());
 		}
-#endif
-
 		#endregion
+#endif
 
 #if __SKIA__
 		[TestMethod]
@@ -1309,7 +1345,6 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml_Controls
 
 			Assert.IsFalse(textBox.TextBoxView.DisplayBlock.Inlines.FireDrawingEventsOnEveryRedraw);
 		}
-#endif
 #endif
 	}
 }

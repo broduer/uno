@@ -26,12 +26,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using Uno.UI.RuntimeTests.Helpers;
 using Point = System.Drawing.Point;
-
-#if __IOS__
-using UIKit;
-#elif __MACOS__
-using AppKit;
-#else
 using Uno.UI;
 using Windows.UI;
 using Windows.ApplicationModel.Appointments;
@@ -39,6 +33,11 @@ using Microsoft.UI.Xaml.Hosting;
 using Uno.Extensions;
 using Windows.UI.Input.Preview.Injection;
 using Uno.UI.Toolkit.Extensions;
+
+#if __IOS__
+using UIKit;
+#elif __MACOS__
+using AppKit;
 #endif
 
 namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml
@@ -1298,13 +1297,15 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml
 		}
 #endif
 
-#if HAS_INPUT_INJECTOR || WINAPPSDK
 		[TestMethod]
 		[RunsOnUIThread]
 		[RequiresFullWindow]
+#if !HAS_COMPOSITION_API
+		[Ignore("Composition APIs are not supported on this platform.")]
+#endif
 		public async Task When_Visual_Offset_Changes_HitTest()
 		{
-			var sut = new Button()
+			var sut = new Button
 			{
 				Content = "Click",
 			};
@@ -1361,9 +1362,12 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml
 		[TestMethod]
 		[RunsOnUIThread]
 		[RequiresFullWindow]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#endif
 		public async Task When_Visual_Offset_Changes_InjectedPointer()
 		{
-			var sut = new Button()
+			var sut = new Button
 			{
 				Content = "Click",
 			};
@@ -1531,7 +1535,6 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml
 #endif
 		}
 #endif
-#endif
 
 #if HAS_UNO
 		[TestMethod]
@@ -1581,13 +1584,18 @@ namespace Uno.UI.RuntimeTests.Tests.Windows_UI_Xaml
 		}
 #endif
 
-#if HAS_UNO && HAS_INPUT_INJECTOR
+#if HAS_UNO
 		#region Drag and Drop
 
 		[TestMethod]
 		[RunsOnUIThread]
 		[DataRow(true)]
 		[DataRow(false)]
+#if !HAS_INPUT_INJECTOR
+		[Ignore("InputInjector is not supported on this platform.")]
+#elif __WASM__
+		[Ignore("Failing on WASM: https://github.com/unoplatform/uno/issues/17742")]
+#endif
 		public async Task When_DragOver_Fires_Along_DragEnter_Drop(bool waitAfterRelease)
 		{
 			if (TestServices.WindowHelper.IsXamlIsland)
